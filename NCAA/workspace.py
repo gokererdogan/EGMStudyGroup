@@ -2,7 +2,6 @@ import pandas as pd
 
 if __name__ == "__main__":
     events = pd.read_csv('data/Events_2010.csv')
-    events_col = events.columns
     d = events.groupby(['Season', 'EventTeamID', 'EventPlayerID', 'EventType']).agg({'EventPlayerID': 'count'})
     days = events['DayNum'].unique()
     teams =events['EventTeamID'].unique()
