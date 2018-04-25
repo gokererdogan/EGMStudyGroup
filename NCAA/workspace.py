@@ -15,6 +15,7 @@ def either_win_lose(events, team1, team2):
 
 
 if __name__ == "__main__":
+    # getting the data
     events = pd.read_csv('data/Events_2010.csv')
     d = events.groupby(['Season', 'EventTeamID', 'EventPlayerID', 'EventType']).agg({'EventPlayerID': 'count'})
     days = events['DayNum'].unique()
