@@ -14,10 +14,20 @@ def either_win_lose(events, team1, team2):
     return len(days1) > 0 and len(days2) > 0
 
 
+def day_unique(df):
+    return len(df['DayNum'].unique())
+
+
+def maclar(teamwin, teamloser):
+    return events[(events['WTeamID'] == teamwin) & (events['LTeamID'] == teamloser)]
+
+
 if __name__ == "__main__":
     events = pd.read_csv('data/Events_2010.csv')
     d = events.groupby(['Season', 'EventTeamID', 'EventPlayerID', 'EventType']).agg({'EventPlayerID': 'count'})
     days = events['DayNum'].unique()
-    teams =events['EventTeamID'].unique()
+    teams = events['EventTeamID'].unique()
     players = events['EventPlayerID'].unique()
     events_indexed_with_day_and_team = events.set_index(['DayNum', 'WTeamID'])
+
+    events.groupby(['WTeamID', 'LTeamID']).apply(day_unique)
