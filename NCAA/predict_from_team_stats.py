@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
+from sklearn.neural_network import MLPClassifier
 
 
 def create_dataset(stats, matches):
@@ -55,13 +57,12 @@ if __name__ == "__main__":
     predict_season = 2011
 
     # get stats for each team in 2010 season
-    # events = pd.read_csv('data/Events_{}.csv'.format(stats_season))
-    # team_stats = events.groupby(['EventTeamID', 'EventType']).agg({'EventType': 'count'})
-    # team_stats = team_stats.unstack('EventType')
-    # team_stats.fillna(0, inplace=True)
+    events = pd.read_csv('data/Events_{}.csv'.format(stats_season))
+    team_stats = events.groupby(['EventTeamID', 'EventType']).agg({'EventType': 'count'})
+    team_stats = team_stats.unstack('EventType', fill_value=0)
 
     # load precalculated stats from disk
-    team_stats = pd.read_csv('data/TeamStats_2010.csv', index_col=0, header=[0, 1])
+    # team_stats = pd.read_csv('data/TeamStats_2010.csv', index_col=0, header=[0, 1])
 
     # get match results for 2011 season
     season_results = pd.read_csv('data/RegularSeasonCompactResults.csv')
@@ -73,10 +74,21 @@ if __name__ == "__main__":
     # use season results as training set and ncaa results as test set
     # form train/test datasets from stats and matches
     train_x, train_y = create_dataset(team_stats, season_results)
-    test_x, test_y = create_dataset(team_stats, season_results)
+    test_x, test_y = create_dataset(team_stats, ncaa_results)
+
+    # normalize statistics
+    scaler = StandardScaler().fit(train_x)
+    train_x = scaler.transform(train_x)
+    test_x = scaler.transform(test_x)
 
     # Fit logistic regression and test accuracy on test dataset
     clf = LogisticRegression()
     clf.fit(train_x, train_y)
     test_acc = clf.score(test_x, test_y)
-    print("Test accuracy: {}".format(test_acc))
+    print("Test accuracy Logistic Regression: {}".format(test_acc))
+
+    # clf = MLPClassifier(hidden_layer_sizes=(10, 10, 10), verbose=True)
+    # clf.fit(train_x, train_y)
+    # test_acc = clf.score(test_x, test_y)
+    # print("Test accuracy MLP: {}".format(test_acc))
+
