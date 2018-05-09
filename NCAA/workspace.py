@@ -21,3 +21,9 @@ if __name__ == "__main__":
     teams =events['EventTeamID'].unique()
     players = events['EventPlayerID'].unique()
     events_indexed_with_day_and_team = events.set_index(['DayNum', 'WTeamID'])
+
+    events['GameID'] = events['DayNum'] * 10000 + events['WTeamID']
+    df = pd.DataFrame(events[['EventID', 'EventTeamID', 'ElapsedSeconds', 'EventPlayerID', 'EventType', 'GameID']]).set_index('GameID')
+    df = df.groupby(['GameID', 'EventTeamID', 'EventType']).agg({'EventType': 'count'})
+    df = df.unstack('EventType', fill_value=0)
+    df = df.groupby(['GameID']).apply(lambda x: pd.concat([x.iloc[0], x.iloc[1]]))
