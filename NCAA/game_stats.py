@@ -28,7 +28,6 @@ if __name__ == "__main__":
     flip_i = np.random.rand(x.shape[0]) > 0.5
     x[flip_i] = np.concatenate((x[flip_i, 25:], x[flip_i, 0:25]), axis=1)
 
-
     x = np.nan_to_num(x)
 
     y = np.zeros(x.shape[0])
@@ -36,7 +35,7 @@ if __name__ == "__main__":
 
     clf = LogisticRegression()
     clf.fit(x, y)
-    clf.score(x, y)
+    print(clf.score(x, y))
 
     c = clf.coef_.T
 
