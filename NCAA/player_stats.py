@@ -28,3 +28,11 @@ if __name__ == "__main__":
     g = season_events.groupby(['EventPlayerID', 'EventType']).agg({'EventType': 'count'})
     player_stats = g.unstack(['EventType'], fill_value=0)
 
+    g_wTeam = season_events.groupby(['EventPlayerID', 'EventTeamID', 'EventType']).agg({'EventType': 'count'})
+    player_stats_wTeam = g_wTeam.unstack(['EventType'], fill_value=0)
+
+    # players of Team ID 1102
+    print(player_stats_wTeam.query("EventTeamID == '1102'"))
+
+    # players of Team ID 1103
+    print(player_stats_wTeam.query("EventTeamID == '1103'"))
