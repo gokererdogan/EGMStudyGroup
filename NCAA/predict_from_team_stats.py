@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import log_loss
 
 
 def create_dataset(stats, matches):
@@ -80,3 +81,4 @@ if __name__ == "__main__":
     clf.fit(train_x, train_y)
     test_acc = clf.score(test_x, test_y)
     print("Test accuracy: {}".format(test_acc))
+    print("Test log loss: ", log_loss(test_y, clf.predict_proba(test_x)))
