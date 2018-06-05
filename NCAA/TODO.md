@@ -1,0 +1,6 @@
+- Split season into stats and train sets
+    - Calculate stats on all matches before day n
+    - Use matches after day n as training data
+    - Do this for all n!
+- Look at last n matches of a player
+    - Or do a weighted sum (i.e., exponential decay) of all past matches of a player.
