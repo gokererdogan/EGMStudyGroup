@@ -15,6 +15,8 @@ def create_dataset(player_stats, matches):
     """
     pass
 
+def getBestPlayers(bestPlayersDf, TeamID):
+    return list(bestPlayersDf[bestPlayersDf['EventTeamID'] == TeamID]['EventPlayerID'])
 
 if __name__ == "__main__":
     # season matches are daynum < 134
@@ -28,3 +30,15 @@ if __name__ == "__main__":
     g = season_events.groupby(['EventPlayerID', 'EventType']).agg({'EventType': 'count'})
     player_stats = g.unstack(['EventType'], fill_value=0)
 
+    g_wTeam = season_events.groupby(['EventPlayerID', 'EventTeamID', 'EventType']).agg({'EventType': 'count'})
+    player_stats_wTeam = g_wTeam.unstack(['EventType'], fill_value=0)
+
+    # players of Team ID 1102
+    print(player_stats_wTeam.query("EventTeamID == '1102'"))
+
+    # players of Team ID 1103
+    print(player_stats_wTeam.query("EventTeamID == '1103'"))
+
+
+    best11PlayersDf = season_events.groupby(['EventTeamID', 'EventPlayerID']).agg({'EventType': 'count'}) \
+        .reset_index().groupby(['EventTeamID']).apply(lambda x: x.nlargest(11, 'EventType'))
