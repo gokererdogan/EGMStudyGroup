@@ -11,7 +11,8 @@ PIECES = {
     'purple': np.array([[1, 1, 1],
                         [0, 1, 1]], dtype=np.int),
     'yellow': np.array([[1, 1, 1],
-                        [1, 0, 1]], dtype=np.int)
+                        [1, 0, 1]], dtype=np.int),
+    'red': np.array([[1, 1, 1, 1, 1]], dtype=np.int)
 }
 
 PIECE_FLAGS = {key: item+1 for (key, item) in zip(PIECES, range(len(PIECES)))}
@@ -65,24 +66,21 @@ def _solve(board, allowed_pieces):
         new_piece = PIECES[piece_color]
         new_piece_flag = PIECE_FLAGS[piece_color]
         for new_piece_config in get_piece_configs(new_piece):
-            # print(new_piece_config)
             for i in range(board.shape[0] - new_piece_config.shape[0] + 1):
                 for j in range(board.shape[1] - new_piece_config.shape[1] + 1):
                     new_board = _place(board, new_piece_config, (i, j), new_piece_flag)
 
                     if new_board is not None:
-                        # print(new_board)
                         if _finished(new_board):
-                            print(new_board)
                             return new_board
-
 
                         # find solution of subproblem
                         new_allowed_pieces = allowed_pieces.copy()
                         new_allowed_pieces.remove(piece_color)
                         subsoln = _solve(new_board, new_allowed_pieces)
                         if subsoln is not None:
-                            return new_board
+                            return subsoln
+
     return None
 
 
@@ -94,8 +92,8 @@ def solve(board_size, allowed_pieces):
 def main():
     # print(PIECES_TO_OPS)
 
-    board_size = (5, 3)
-    allowed_pieces = ['orange', 'purple', 'yellow']
+    board_size = (5, 4)
+    allowed_pieces = ['orange', 'purple', 'yellow', 'red']
 
     soln = solve(board_size, allowed_pieces)
     print(soln)
