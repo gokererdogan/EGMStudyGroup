@@ -114,7 +114,7 @@ def place(board, piece, i, j):
     new_board = board.copy()
     new_board[i:ie, j:je] += piece
 
-    if np.any(new_board > 1):
+    if np.any(new_board[i:ie, j:je] > 1):
         return None
 
     return new_board
